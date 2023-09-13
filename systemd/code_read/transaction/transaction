@@ -1,0 +1,22 @@
+transasction数据结构为unit和job的链接桥梁，unit与jobs可以通过transaction.jobs哈希表对应。
+有新的jobs需要处理，先创建transaction，然后将job加入到transaction，之后transaction_apply。
+
+static Job* transaction_add_one_job(Transaction *tr, JobType type, Unit *unit, bool *is_new)
+1.通过tr->jobs查询以unit为key的job，因为job有关于LIST_FIELDS(Job, transaction)链表，所以可以遍历与此unit相关的所有jobs链表；
+2.如果要添加的jobs已经存在，则返回此job，且is_new置为false；
+3.如果找不到，则将当前新job加入jobs链表头部
+4.将新job替换到transaction->jobs哈希表中，这样后续到第1步就可以直接从当前job往后遍历，is_new置为true，之后会递归调用当前函数添加所有有依赖关系的unit，递归停止条件为is_new为false
+
+int transaction_add_job_and_dependencies(
+                Transaction *tr,
+                JobType type,
+                Unit *unit,
+                Job *by,
+                bool matters,
+                bool conflicts,
+                bool ignore_requirements,
+                bool ignore_order,
+                sd_bus_error *e);
+1.transaction_add_one_job，添加当前job
+2.如果参数by不为空，表明当前transaction的事务为by的object事务，添加上job_dependency依赖关系；否则，当前jobs即为transaction的根事务
+3.如果步骤1发现当前job为new，则要对当前job的unit有UnitDependency的unit也加入到当前transation里，细节可见transaction_add_one_job；

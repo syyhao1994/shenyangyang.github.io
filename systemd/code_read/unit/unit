@@ -1,0 +1,11 @@
+typedef struct Unit {
+    /* 为双重哈希表（Hashmap(UnitDependency, Hashmap(Unit*, UnitDependencyInfo))），保存了当前unit所有的依赖关系所对应的units，还保存了为什么会对这些units有依赖，
+    /* 便于后续flush操作进行筛选
+    */
+	Hashmap *dependencies;
+}
+
+此函数用来遍历特定UnitDependencyAtom所对应的UnitDependency的所有unit单元，一般的用途是将这些单元添加到某transaction内，用于后续执行jobs
+UNIT_FOREACH_DEPENDENCY(other, u, match_atom):
+1.如果UnitDependencyAtom直接有对应UnitDependency，则直接获取相关的unit数组；
+2.否则遍历所有u->dependecies的所有UnitDependency，如果转换成UnitDependencyAtom后 &match_atom有交集，那么就说明当前依赖关系所对应的单元都需要进行处理；
