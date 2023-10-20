@@ -1,0 +1,13 @@
+sd_bus_default_system(sd_bus **ret)
+1.正常返回值为1
+2.调用bus_default(sd_bus_open_system, &default_system_bus, ret)，如果ret或者default_system_bus不为空，则直接沿用。否则通过调用sd_bus_open_system建立与server端的链接，并将建立链接的dbus赋值给default_system_bus
+3.初次建立链接时，都是通过bus_start_address(sd_bus *b)进行链接，此函数为for死循环，获取b->address进行处理，通过bus_socket_connect(sd_bus *b)与connect 服务端，并且建立监听；
+
+_public_ int sd_bus_call_async(sd_bus *bus,sd_bus_slot **slot,sd_bus_message *_m,sd_bus_message_handler_t callback,void *userdata,uint64_t usec) 
+1.异步调用，返回slot，但是一些调用slot实际传入为NULL，所以不关心slot，此时method call的生命周期与bus生命周期一致，也无法后续取消此method call，只关心bus->reply_callbacks以及bus->reply_callbacks_prioq上面注册对应的reply_callback回调；如果slot不为NULL，那么后续可以通过sd_bus_slot_unref来减少slot的引用计数，当引用计数为0，会调用bus_slot_free，通过删除bus->reply_callbacks/reply_callbacks_prioq，取消对应method call的回调操作。也可以通过sd_bus_slot_set_floating改变slot的floating状态；
+2.bus->reply_callbacks是一个有序hash表，将reply_callback插入进去后，在后面process_message()->process_reply()中可以通过reply_coockie找到对应的第一步插入的reply_callback回调，进行回调处理；
+3.bus->reply_callbacks_prioq是一个优先队列数据结构，根据超时时间的顺序插入reply_callback回调，这个队列主要用于process_running()->process_timeout进行超时处理，直接通过获取队列第一个回调判断是否超时，超时就进行超时处理，否则直接退出，因为后面的肯定也是没有超时的。
+4.完成回调函数注册后，再通过sd_bus_send函数进行dbus消息发送。
+
+_public_ int sd_bus_call(sd_bus *bus,sd_bus_message *_m,uint64_t usec,sd_bus_error *error,sd_bus_message **reply)
+1.同步调用，会等待dbus回复的消息，通过sd_bus_send发送消息后，通过for死循环遍历bus->rqueue_size，将dbus的reply或者error赋值给参数列表里对应的参数，传上去进行处理
