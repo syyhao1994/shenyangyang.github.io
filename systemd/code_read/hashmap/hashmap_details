@@ -1,1 +1,76 @@
 记录hashmap相关细节
+1.systemd hashmap使用的冲突解决方法为Robin Hood，探测顺序为线性探测。请先学习Robin Hood哈希算法。
+
+2.Robin Hood冲突解决法有一个优势，当寻找对应的key值时，只要D(当前key值)<D(目标key值)（D(x)表示x到初始存储桶的距离，distance to initial bucket (DIB)），即可停止查询，无需遍历整个表。base_bucket_scan寻找匹配的key就利用了这个判据加快寻找速度。
+
+3.数据结构解释,systemd hashmap分为三类，正常的hashmap(plain_hashmap)/记录差异顺序的hashmap(order_hashmap)/set类型hashmap(set)。所以数据结构一般也都是分为三种。有一个特点是基本所有针对这三种类型结构体都是以同样元素的指针开始，便于后续通用的代码编写，一般涉及到order_hashmap需要强转类型到对应的数据结构指针(类似OrderedHashmap *lh = (OrderedHashmap*)h)，通用操作h都是HashmapBase，后续按需强转。
+	(1)entry概念：可以理解为对应hashmap每个bucket需要保存的元素的内容,有plain_hashmap_entry/ordered_hashmap_entry/set_entry，结构体第一个元素都是hashmap_base_entry，只有一个key指针
+	(2)Hashmap：实际的哈希表数据结构，结构体都是以HashmapBase元素开始，大部分内容都在HashmapBase，只有OrderedHashmap多出两个iterate_list_head, iterate_list_tail值。
+
+4.ENABLE_DEBUG_HASHMAP:宏定义打开后可以调试追踪所有hashmap
+
+5.indirect_storage/direct_storage:64位环境39(8 + 16 + 4 + 4 + 4 + 3)字节,32位环境35(8 + 16 + 4 + 4 +4 + 3)字节。
+	(1)direct_storage：hashmap_base_new创建新的hashmap默认使用的是数组结构(storage[sizeof(struct indirect_storage)];)
+	(2)当需要resize_buckets，会remalloc，所以会涉及到新的内存分配，即为indirect_storage。
+
+6.用unsigned idx用来寻址对应的entry，例如OrderedHashmap链表也是用unsigned iterate_next/iterate_previous表示前后元素。
+
+7.dib_raw_ptr函数目前理解是用来获取buckets对应的DIB数据的，返回是个unsigned数组。因为indirect/direct_storage数据结构的storage指针是用来存放buckets和DIBs的。而此函数就是从storage指针开始跳过所有的hashmap_entry，所以storage存放数据的方式应该是前面存放所有的hashmap_entry，后面放的是DIBs数据。reset_direct_storage函数重置的方式也可以佐证这个结论。
+
+8.base_remove_entry函数做的事情
+    (1)通过dib_raw_ptr获取DIBs数据，后续可以通过idx下标直接获取对应buckets元素的DIB，为后续整体移动桶做准备
+	(2)从删除的bucket桶下标开始，向后遍历，直到bucket为空桶或者DIB为0停止，获取idx为right，因为后续整体向前移动一个元素，但是如果是DIB为0或者还没有元素填充的桶无需移动，否则破坏了DIB=0的最优选择。
+	(3)修改删除元素前后元素的iterate_previous和iterate_next数据，让其指向删除bucket的前后的bucket
+	(4)将第2步获取到的区间内bucket整体向左移动一位，覆盖要remove的bucket，达到删除目录。
+	
+9.hashmap_iterate_in_insertion_order函数：按照插入顺序迭代，用来遍历ORDERED hashmap，入参i为即将遍历的entry1，返回值idx为entry1的idx，同时i被更新为entry1->iterate_next,即将被遍历的entry2，这个顺序是按照插入顺序来的。
+
+10.hashmap_iterate_in_internal_order：按照hashmap内部顺序来，从前往后遍历，跳过中间free的bucket，用来遍历ORDERED hashmap。
+
+11.hashmap_iterate_entry：如果是Ordered hashmap，就使用hashmap_iterate_in_insertion_order，否则使用hashmap_iterate_in_internal_order进行下一个bucket的获取及下下一个待迭代的bucket。
+
+12._hashmap_iterate：根据迭代器i获取对应的key和value。
+
+13._hashmap_iterated_cache_new：将入参hashmap给缓存起来
+
+14.hashmap_base_new：创建一个新的hashmap
+	(1)判断内存池是否启用
+	(2)内存池启用则从内存器分配内存
+	(3)初始化hashmap，并重置direct_storage，这里看来默认先使用的是direct_storage，因为reset_direct_storage函数内会直接assert(!h->has_indirect)
+	(4)通过锁保护hashkey的初始化
+
+15.hashmap_put:向hashmap中放入对应的键值对
+	(1)通过bucket_hash获取理论上key键需要放入的bucket的序号
+	(2)通过bucket_scan寻找对应的键值对的idx序号，这里使用了第2点提到的方法加快寻找
+	(3)如果第二步找到了对应的key键，对应的value已经和当前value相同，则不做处理；如果不同，报错已经存在；
+	(4)如果没找到，先将此键值对放到swap里
+	(5)最后hashmap_put_boldly放入hashmap中，不考虑之前是否已经存在，所以第2步做了前置检查。
+
+16.hashmap_put_robin_hood：从idx开始找个空的或者符合robin hood规则的bucket的插入entry元素，当放入bucket是根据robin hood规则调整，那么原来在此bucket的entry需要放到tmp中继续处理，此时返回true。否则直接插入空闲位置，则直接返回false。与resize_buckets第7步配合完成resize的entry位置调整
+	(1)通过distance变量表示待插入entry距离理想bucket的距离，当发现不满足D(当前已在bucket内entry值)<D(待插入entry值)，就可以把entry填到对于的buckets，然后把原来的buckets放到swap[IDX_TMP]->swap[IDX_PUT]，循环处理,一直通过swap数组实现元素往后移动。
+	(2)当dib标记为DIB_RAW_FREE或者DIB_RAW_REHASH则进入停止条件；若为DIB_RAW_FREE，直接将swap[IDX_PUT]放入bucket即可，函数返回false；
+	(3)若dib标记为DIB_RAW_REHASH则将待rehash元素与swap[IDX_PUT]交换，然后函数返回true。待上层resize_buckets函数继续rehash处理。
+	
+17.	hashmap_base_put_boldly:将entry放入hashmap，不考虑是否key已经存在。所以调用者需要保证key不存在hashmap中，同时要把要插入的键值对放入swap的IDX_PUT位置内。
+	(1)判断是否需要resize并进行resize
+	(2)对于orderedhashmap，修改要插入的entry以及iterate_list_tail/iterate_list_head的iterate_next和iterate_previous值
+	(3)hashmap_put_robin_hood，从idx开始找个空的bucket的插入entry元素。只要发现不满足D(当前key值)<D(目标key值)(第2点条件)，就可以把entry填到对于的buckets，然后把原来的buckets放到swap[IDX_TMP]->swap[IDX_PUT]，然后就for循环，一直通过swap实现元素往后移动，最后遇到free bucket或者DIB_RAW_REHASH停止。
+	如果遇到free bucket，就直接把swap[IDX_PUT]放进去就好，返回false。如果遇到DIB_RAW_REHASH，那么最后的待移动的元素会被保存到swap[IDX_PUT]中，并返回true，表明有待置换条目需要进行rehash。
+
+18.resize_buckets:此函数用来扩充hashmap
+	(1)获取扩充后的entries数量，如果是direct storage，只要direct_buckets>entries数量即可，无需考虑负载因子
+	(2)如果需要扩充，那么考虑负载因子，扩充1.25倍的bucket数量,再通过log2u_round_up函数向上取整，应该是类似于2的倍数
+	(3)如果是indirect storage，那么扩充；否则，直接malloc对应的大小的空间
+	(4)如果之前是direct_storage，将原来direct.storage的内容复制到新的空间中，将direct_storage变为indirect_storage，并且复用之前生成的key
+	(5)将扩容前的dibs数据数据移动到新的dibs数组内，如果原来不是free的bucket，那么现在就赋值为DIB_RAW_REHASH，标识对应的buckets需要rehash
+	(6)将新增的entries清零，包含部分或者之前的DIBS数据数据
+	(7)rehash第5步标记的需要rehash的entry，寻找合适的buckets，并更新对应DIBS数据，利用hashmap_put_robin_hood将所有扩容前的元素遍历rehash处理，之后完成resize
+	
+19.mempool_alloc_tile：
+	(1)如果内存池中有空闲的hashmap，那么直接取第一个空闲的hashmap大小空间
+	(2)如果是第一次从内存池分配或者内存池已经没有空闲内存了，那就需要新分配一个内存池。如果是第一次分配，那么分配8个对应hashmap大小，否则就是之前的内存池数量的2倍；
+	(3)从第1个内存池中根据n_used数量偏移到对应的空闲地址，返回此地址指针，用于后续使用；
+	mempool->       first_pool->         next pool           ->  next pool
+	         32*tile_size+size(pool)  16*tile_size+size(pool)   8*tile_size+size(pool)
+			 
+20.mempool_free_tile:用了内存池后，所有释放的hashmap指针会直接加入到freelist，便于后续mempool_alloc_tile分配使用
