@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" version="24.7.7">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36" version="24.7.8">
   <diagram name="第 1 页" id="_ok-8zPEw34e-IFgDoh3">
-    <mxGraphModel dx="1562" dy="903" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1562" dy="853" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -40,11 +40,11 @@
         <mxCell id="km08-3lCdweRNl0uT69s-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="km08-3lCdweRNl0uT69s-10" target="km08-3lCdweRNl0uT69s-14" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="km08-3lCdweRNl0uT69s-10" value="&lt;div&gt;listen_fds:获取ctrl(udevadm)及uevent(netlink)接收事件的fd&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="15" y="330" width="115" height="60" as="geometry" />
+        <mxCell id="km08-3lCdweRNl0uT69s-10" value="&lt;div&gt;listen_fds:获取ctrl(udevadm control)及uevent(netlink)接收事件的fd，只是尝试看socket是否能复用，如果不可，则在下一步创建socket&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="15" y="330" width="115" height="100" as="geometry" />
         </mxCell>
         <mxCell id="km08-3lCdweRNl0uT69s-12" value="sd_listen_fds:继承来自systemd的fd，实际这里只是获取LISTEN_FDS，然后从3开始给fd设置cloexec标志位，而FD的值是service中Socket对应的数量" style="whiteSpace=wrap;html=1;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="150" y="330" width="212.5" height="60" as="geometry" />
+          <mxGeometry x="150" y="350" width="212.5" height="60" as="geometry" />
         </mxCell>
         <mxCell id="km08-3lCdweRNl0uT69s-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="km08-3lCdweRNl0uT69s-14" target="km08-3lCdweRNl0uT69s-16" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -53,16 +53,16 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="km08-3lCdweRNl0uT69s-14" value="&lt;div&gt;manager_new:设置ctrl和uevent socket&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="15" y="420" width="115" height="30" as="geometry" />
+          <mxGeometry x="15" y="447.5" width="115" height="30" as="geometry" />
         </mxCell>
         <mxCell id="km08-3lCdweRNl0uT69s-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="km08-3lCdweRNl0uT69s-16" target="km08-3lCdweRNl0uT69s-18" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="km08-3lCdweRNl0uT69s-16" value="udev_ctrl_enable_receiving：bind control socket并listen" style="whiteSpace=wrap;html=1;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="150" y="415" width="160" height="40" as="geometry" />
+        <mxCell id="km08-3lCdweRNl0uT69s-16" value="udev_ctrl_enable_receiving：bind control socket并listen，准备就绪，但是还不能处理" style="whiteSpace=wrap;html=1;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="150" y="442.5" width="160" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="km08-3lCdweRNl0uT69s-18" value="device_monitor_new_full:监听uevent socket" style="whiteSpace=wrap;html=1;rounded=0;" parent="1" vertex="1">
-          <mxGeometry x="333.5" y="415" width="160" height="40" as="geometry" />
+        <mxCell id="km08-3lCdweRNl0uT69s-18" value="device_monitor_new_full:创建sd_device_monitor对象并bind，可以接收消息，但是还不能处理" style="whiteSpace=wrap;html=1;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="334" y="442.5" width="160" height="40" as="geometry" />
         </mxCell>
         <mxCell id="km08-3lCdweRNl0uT69s-23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="km08-3lCdweRNl0uT69s-20" target="km08-3lCdweRNl0uT69s-22" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -71,64 +71,217 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="km08-3lCdweRNl0uT69s-20" value="&lt;div&gt;若以daemon运行，则通过fork子进程处理，否则直接当前进程继续下一步&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="15" y="480" width="115" height="60" as="geometry" />
+          <mxGeometry x="15" y="507.5" width="115" height="60" as="geometry" />
         </mxCell>
         <mxCell id="km08-3lCdweRNl0uT69s-22" value="&lt;div&gt;创建daemon进程标准动作：若log leven小于debug，把0 1 2重定向到/dev/null，fork，setsid&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="150" y="485" width="190" height="50" as="geometry" />
+          <mxGeometry x="150" y="512.5" width="190" height="50" as="geometry" />
         </mxCell>
         <mxCell id="km08-3lCdweRNl0uT69s-26" value="&lt;div&gt;main_loop:循环&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="15" y="570" width="115" height="30" as="geometry" />
+          <mxGeometry x="15" y="597.5" width="115" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-2" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="km08-3lCdweRNl0uT69s-28" target="6oepLwqIfdeqpx-8wIz2-1">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-2" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" parent="1" source="km08-3lCdweRNl0uT69s-28" target="6oepLwqIfdeqpx-8wIz2-1" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="km08-3lCdweRNl0uT69s-28" value="main_loop" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="520" y="10" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-4" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="6oepLwqIfdeqpx-8wIz2-1" target="6oepLwqIfdeqpx-8wIz2-3">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-4" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" parent="1" source="6oepLwqIfdeqpx-8wIz2-1" target="6oepLwqIfdeqpx-8wIz2-3" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-1" value="socketpair:生成一对socket，作为workers与daemon的通信两端" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-1" value="socketpair:生成一对socket，作为workers与daemon的通信两端" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="520" y="60" width="120" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-6" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="6oepLwqIfdeqpx-8wIz2-3" target="6oepLwqIfdeqpx-8wIz2-5">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-6" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" parent="1" source="6oepLwqIfdeqpx-8wIz2-3" target="6oepLwqIfdeqpx-8wIz2-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-3" value="创建inotify_fd，监控存储设备变更" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-3" value="创建inotify_fd，监控存储设备变更" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="520" y="130" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-8" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="6oepLwqIfdeqpx-8wIz2-5" target="6oepLwqIfdeqpx-8wIz2-7">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-8" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" parent="1" source="6oepLwqIfdeqpx-8wIz2-5" target="6oepLwqIfdeqpx-8wIz2-7" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-5" value="udev_watch_restore:将老的监控目录重新恢复" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="Ai_m3zx1IN6QH22K076k-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="6oepLwqIfdeqpx-8wIz2-5" target="Ai_m3zx1IN6QH22K076k-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-5" value="udev_watch_restore:将老的监控目录重新恢复" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="520" y="190" width="120" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-10" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="6oepLwqIfdeqpx-8wIz2-7" target="6oepLwqIfdeqpx-8wIz2-9">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-10" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" parent="1" source="6oepLwqIfdeqpx-8wIz2-7" target="6oepLwqIfdeqpx-8wIz2-9" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-7" value="如果有/run/udev/watch，重命名为watch.old&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-7" value="如果有/run/udev/watch，重命名为watch.old&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="670" y="195" width="120" height="45" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-12" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="6oepLwqIfdeqpx-8wIz2-9" target="6oepLwqIfdeqpx-8wIz2-11">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-12" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" parent="1" source="6oepLwqIfdeqpx-8wIz2-9" target="6oepLwqIfdeqpx-8wIz2-11" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-9" value="遍历watch.old下所有的文件，只处理描述符到设备的链接，设备链接到文件符的直接unlink" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-9" value="遍历watch.old下所有的文件，只处理描述符到设备的链接，设备链接到文件符的直接unlink" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="810" y="195" width="190" height="45" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-14" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="6oepLwqIfdeqpx-8wIz2-11" target="6oepLwqIfdeqpx-8wIz2-13">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-14" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" parent="1" source="6oepLwqIfdeqpx-8wIz2-11" target="6oepLwqIfdeqpx-8wIz2-13" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-11" value="device_new_from_watch_handle_at：创建新的链接" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="Ai_m3zx1IN6QH22K076k-4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="6oepLwqIfdeqpx-8wIz2-11" target="Ai_m3zx1IN6QH22K076k-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-11" value="device_new_from_watch_handle_at：创建新的链接" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1020" y="195" width="210" height="45" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-16" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" edge="1" parent="1" source="6oepLwqIfdeqpx-8wIz2-13" target="6oepLwqIfdeqpx-8wIz2-15">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-16" value="" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;" parent="1" source="6oepLwqIfdeqpx-8wIz2-13" target="6oepLwqIfdeqpx-8wIz2-15" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-13" value="readlinkat_malloc:获取fd链接指向的设备名称，例如b253:2" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-13" value="readlinkat_malloc:获取fd链接指向的设备名称，例如b253:2" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1020" y="260" width="210" height="45" as="geometry" />
         </mxCell>
-        <mxCell id="6oepLwqIfdeqpx-8wIz2-15" value="sd_device_new_from_device_id" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="Ai_m3zx1IN6QH22K076k-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="6oepLwqIfdeqpx-8wIz2-15" target="Ai_m3zx1IN6QH22K076k-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="6oepLwqIfdeqpx-8wIz2-15" value="sd_device_new_from_device_id:通过主次设备号获取/sys路径" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="1020" y="330" width="210" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-1" value="sd_device_new_from_syspath:创建新的sd_device对象，设置对应的syspath和devpathyiji DEVPATH属性" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1310" y="330" width="210" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-3" target="Ai_m3zx1IN6QH22K076k-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-3" target="Ai_m3zx1IN6QH22K076k-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-3" value="udev_watch_begin:将设备加入到watch inotify监控" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1540" y="195" width="210" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-5" target="Ai_m3zx1IN6QH22K076k-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-5" value="device_read_uevent_file:通过uevent文件获取对应的devname，例如/dev/dm-1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1535" y="260" width="220" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-7" target="Ai_m3zx1IN6QH22K076k-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-7" value="inotify_add_watch:加入inotify监控" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1535" y="330" width="220" height="22.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-9" value="device_set_watch_handle:处理/run/udev/watch目录下的句柄和设备的双向软链接，先移出旧的，然后创建新的" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1535" y="375" width="220" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-11" value="删除/run/udev/watch.old老的目录" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1780" y="205" width="180" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-13" target="Ai_m3zx1IN6QH22K076k-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-13" value="sd_event_default" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="260" width="120" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-15" target="Ai_m3zx1IN6QH22K076k-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-15" value="sd_event_add_signal:对SIGINT/TERM/HUP/CHLD信号注册处理函数" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="300" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-20" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-17" target="Ai_m3zx1IN6QH22K076k-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-17" value="udev_ctrl_attach_event" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="372.5" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-19" target="Ai_m3zx1IN6QH22K076k-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-29" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-19" target="Ai_m3zx1IN6QH22K076k-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-19" value="udev_ctrl_start:完成control事件相关处理函数" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="420" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-24" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-21" target="Ai_m3zx1IN6QH22K076k-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-21" value="udev_ctrl_event_handler:有client连接触发io调用此函数建立连接" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="350" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-26" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-23" target="Ai_m3zx1IN6QH22K076k-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-23" value="udev_ctrl_connection_event_handler:接着调用此函数接收消息" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="415" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-25" value="然后调用on_ctrl_msg处理消息" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="457.5" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-31" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-28" target="Ai_m3zx1IN6QH22K076k-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-28" value="设置control事件优先级为IDLE" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="470" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-30" target="Ai_m3zx1IN6QH22K076k-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-30" value="设置设备inotify句柄的io回调为on_inotify" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="512.5" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-32" target="Ai_m3zx1IN6QH22K076k-34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-32" value="sd_device_monitor_attach_event" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="557" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-34" target="Ai_m3zx1IN6QH22K076k-36">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-42" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-34" target="Ai_m3zx1IN6QH22K076k-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-34" value="sd_device_monitor_start:注册uevent事件处理函数" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="600" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-40" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-36" target="Ai_m3zx1IN6QH22K076k-39">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-36" value="device_monitor_event_handler：有事件触发调用此函数" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="690" y="507.5" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-39" value="device_monitor_event_handler:接收netlink信息，调用on_uevent事件" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="557.5" width="170" height="42.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-45" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-41" target="Ai_m3zx1IN6QH22K076k-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-41" value="对fd_worker句柄注册on_worker回调函数" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="650" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-47" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-44" target="Ai_m3zx1IN6QH22K076k-46">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-44" value="sd_event_add_post:添加on_post回调事件" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="700" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-49" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-46" target="Ai_m3zx1IN6QH22K076k-48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-46" value="udev_builtin_init:builtin的初始化动作执行" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="750" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-51" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-48" target="Ai_m3zx1IN6QH22K076k-50">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-48" value="udev_rules_load:加载规则" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="800" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-53" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-50" target="Ai_m3zx1IN6QH22K076k-52">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-50" value="udev_rules_apply_static_dev_perms:设置规则的权限" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="850" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-52" value="sd_event_loop" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="505" y="910" width="150" height="27.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-52" target="Ai_m3zx1IN6QH22K076k-52">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
