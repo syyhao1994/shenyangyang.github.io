@@ -343,8 +343,92 @@
         <mxCell id="Ai_m3zx1IN6QH22K076k-75" value="如果规则没了，加载规则" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="1210" y="703.75" width="140" height="20" as="geometry" />
         </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-80" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-77" target="Ai_m3zx1IN6QH22K076k-79">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="Ai_m3zx1IN6QH22K076k-77" value="event_is_block判断是否阻塞，不阻塞就调用event_run起进程跑" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="1370" y="691.25" width="140" height="46.25" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-82" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-79" target="Ai_m3zx1IN6QH22K076k-81">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-79" value="&lt;b&gt;disable&amp;nbsp;retry_event_source:待详细深入&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1370" y="753.75" width="140" height="36.25" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-84" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-81" target="Ai_m3zx1IN6QH22K076k-83">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-86" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-81" target="Ai_m3zx1IN6QH22K076k-85">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-81" value="查找idle的worker，找到则发送device消息，没找到则调用worker_spawn fork子进程进行处理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1370" y="810" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-102" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-83" target="Ai_m3zx1IN6QH22K076k-101">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-83" value="device_monitor_send_device：发送device信息给worker monitor，worker会有事件监听，调用device_monitor_event_handler回调函数" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1535" y="795" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-88" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-85" target="Ai_m3zx1IN6QH22K076k-87">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-85" value="worker_spawn" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1370" y="885" width="140" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-90" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-87" target="Ai_m3zx1IN6QH22K076k-89">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-87" value="与主进程简历netlink关联，可以允许主进程发消息" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1365" y="930" width="150" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-92" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-89" target="Ai_m3zx1IN6QH22K076k-91">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-89" value="device_monitor_enable_receiving使能消息接收" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1365" y="970" width="150" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-94" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-91" target="Ai_m3zx1IN6QH22K076k-93">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-96" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-91" target="Ai_m3zx1IN6QH22K076k-95">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-91" value="safe_fork" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1365" y="1010" width="150" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-100" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-93" target="Ai_m3zx1IN6QH22K076k-99">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-93" value="子进程udev_worker_main处理event事件" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1365" y="1050" width="150" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-98" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-95" target="Ai_m3zx1IN6QH22K076k-97">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-95" value="主进程worker_new将创建的worker放入udev进程的wokers 哈希表中" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1535" y="997.5" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-97" value="worker_attach_event:将event和worker绑定起来" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1710" y="1006.25" width="150" height="32.5" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-106" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-99" target="Ai_m3zx1IN6QH22K076k-105">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-99" value="sd_event初始化，注册SIGTERM信号" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1135" y="1050" width="150" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-104" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-101" target="Ai_m3zx1IN6QH22K076k-103">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-101" value="device_monitor_send_device：发送device信息给worker monitor，worker会有事件监听，调用device_monitor_event_handler回调函数接收信息" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1730" y="795" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-103" value="worker_device_monitor_handler：再调用此函数进行处理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1930" y="795" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-105" value="worker_device_monitor_handler：先调用此函数处理当前事件" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1135" y="1006.25" width="150" height="25" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
