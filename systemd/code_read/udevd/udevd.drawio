@@ -400,8 +400,8 @@
         <mxCell id="Ai_m3zx1IN6QH22K076k-100" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-93" target="Ai_m3zx1IN6QH22K076k-99">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ai_m3zx1IN6QH22K076k-93" value="子进程udev_worker_main处理event事件" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="1365" y="1050" width="150" height="25" as="geometry" />
+        <mxCell id="Ai_m3zx1IN6QH22K076k-93" value="子进程创建UdevWorker对象，这里绑定pipe_fd为主进程创立的一堆socket的写端，同时调用udev_worker_main处理event事件" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1365" y="1050" width="150" height="90" as="geometry" />
         </mxCell>
         <mxCell id="Ai_m3zx1IN6QH22K076k-98" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-95" target="Ai_m3zx1IN6QH22K076k-97">
           <mxGeometry relative="1" as="geometry" />
@@ -416,7 +416,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="Ai_m3zx1IN6QH22K076k-99" value="sd_event初始化，注册SIGTERM信号" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="1135" y="1050" width="150" height="25" as="geometry" />
+          <mxGeometry x="1190" y="1082.5" width="150" height="25" as="geometry" />
         </mxCell>
         <mxCell id="Ai_m3zx1IN6QH22K076k-104" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-101" target="Ai_m3zx1IN6QH22K076k-103">
           <mxGeometry relative="1" as="geometry" />
@@ -427,8 +427,26 @@
         <mxCell id="Ai_m3zx1IN6QH22K076k-103" value="worker_device_monitor_handler：再调用此函数进行处理" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="1930" y="795" width="180" height="90" as="geometry" />
         </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-108" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-105" target="Ai_m3zx1IN6QH22K076k-107">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="Ai_m3zx1IN6QH22K076k-105" value="worker_device_monitor_handler：先调用此函数处理当前事件" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="1135" y="1006.25" width="150" height="25" as="geometry" />
+          <mxGeometry x="1190" y="1038.75" width="150" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-110" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-107" target="Ai_m3zx1IN6QH22K076k-109">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-107" value="worker_process_device:处理设备" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="997.5" width="150" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-112" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-109" target="Ai_m3zx1IN6QH22K076k-111">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-109" value="如果返回是EVENT_RESULT_TRY_AGAIN，则重试此事件" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="930" width="150" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-111" value="worker_send_result:发送结果到udev主进程，触发on_worker" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="860" width="150" height="50" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
