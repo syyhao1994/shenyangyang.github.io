@@ -358,7 +358,7 @@
         <mxCell id="Ai_m3zx1IN6QH22K076k-82" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-79" target="Ai_m3zx1IN6QH22K076k-81">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Ai_m3zx1IN6QH22K076k-79" value="&lt;b&gt;disable&amp;nbsp;retry_event_source:待详细深入&lt;/b&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="Ai_m3zx1IN6QH22K076k-79" value="disable&amp;nbsp;retry_event_source" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="1370" y="753.75" width="140" height="36.25" as="geometry" />
         </mxCell>
         <mxCell id="Ai_m3zx1IN6QH22K076k-84" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-81" target="Ai_m3zx1IN6QH22K076k-83">
@@ -472,8 +472,14 @@
         <mxCell id="Ai_m3zx1IN6QH22K076k-122" value="获取发消息的woker进程，如果是KILLING状态，就杀死进程，否则改为IDLE状态" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="852.5" y="651.5" width="227.5" height="26" as="geometry" />
         </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-128" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Ai_m3zx1IN6QH22K076k-124" target="Ai_m3zx1IN6QH22K076k-127">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="Ai_m3zx1IN6QH22K076k-124" value="如果子进程返回结果是EVENT_RESULT_TRY_AGAIN，将事件重新入队，其实就是把state改成QUEUED" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="1110" y="651.5" width="303" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="Ai_m3zx1IN6QH22K076k-127" value="requeue需要设置定时器，每隔200毫秒触发一次event事件，这样on_post事件才能调度woker处理，否则没有机会处理重试事件" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1460" y="647" width="353" height="33.5" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
